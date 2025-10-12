@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Registration & Versandoptionen</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/registrierung-style.css" />
+  <script src="js/registrierung-script.js" defer></script>
+</head>
+
+<body>
+  
+  <main class="container">
+    <!-- STEP 1: Registrierung -->
+    <section id="step-1" class="card">
+      <div class="stepper" aria-hidden="true">
+        <div class="step active">1 · Registrierung</div>
+        <div class="step">2 · Versandoption</div>
+        <div class="step">3 · Bestätigen</div>
+      </div>
+      <h1>Registrieren</h1>
+      <p class="muted">Bitte füllen Sie das Formular aus, um fortzufahren.</p>
+
+      <form id="register-form" class="form" novalidate>
+        <div class="form-group">
+          <label for="firstname">Vorname</label>
+          <input type="text" id="firstname" name="firstname" autocomplete="given-name" required />
+        </div>
+        <div class="form-group">
+          <label for="lastname">Nachname</label>
+          <input type="text" id="lastname" name="lastname" autocomplete="family-name" required />
+        </div>
+        <div class="form-group full">
+          <label for="email">E‑Mail</label>
+          <input type="email" id="email" name="email" autocomplete="email" required />
+        </div>
+        <div class="form-group">
+          <label for="password">Passwort</label>
+          <input type="password" id="password" name="password" autocomplete="new-password" minlength="6" required />
+        </div>
+        <div class="form-group">
+          <label for="confirm-password">Passwort bestätigen</label>
+          <input type="password" id="confirm-password" name="confirm-password" autocomplete="new-password" required />
+        </div>
+        <div class="form-group full">
+          <span id="reg-error" class="error" role="alert" aria-live="polite"></span>
+        </div>
+        <div class="actions full">
+          <button type="submit" class="btn" id="register-btn">Registrieren</button>
+          <button type="reset" class="btn ghost">Zurücksetzen</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- STEP 2: Versandoptionen + Spenden-Details -->
+    <section id="step-2" class="card hidden" aria-hidden="true">
+      <div class="stepper" aria-hidden="true">
+        <div class="step">1 · Registrierung</div>
+        <div class="step active">2 · Versandoption</div>
+        <div class="step">3 · Bestätigen</div>
+      </div>
+      <h2>Versandoption wählen</h2>
+      <p class="muted">Wählen Sie eine Option: <strong>Abholung</strong> (von Ihrer Adresse) oder <strong>Übergabe</strong> (Abgabe am nächsten Drop‑Point).</p>
+
+      <div class="options-grid">
+        <article id="opt-abholung" class="option-card" tabindex="0" role="button" aria-pressed="false">
+          <div>
+            <h3 style="margin:0 0 6px;">1 · Abholung</h3>
+            <p class="muted" style="margin:0">Wir holen das Paket an Ihrer Adresse ab. (PLZ muss in der Nähe des Büros sein)</p>
+          </div>
+          <div class="actions">
+            <button class="btn" type="button">Abholung wählen</button>
+          </div>
+        </article>
+
+        <article id="opt-uebergabe" class="option-card" tabindex="0" role="button" aria-pressed="false">
+          <div>
+            <h3 style="margin:0 0 6px;">2 · Übergabe</h3>
+            <p class="muted" style="margin:0">Suchen Sie den nächsten Drop‑Point für die Abgabe.</p>
+          </div>
+          <div class="actions">
+            <button class="btn secondary" type="button">Übergabe wählen</button>
+          </div>
+        </article>
+      </div>
+
+      <!-- Abholung Form -->
+      <div id="abholung-form" class="hidden" style="margin-top:20px;">
+        <h3>Abholadresse</h3>
+        <form id="pickup-form" class="form" novalidate>
+          <div class="form-group full">
+            <label for="street">Straße</label>
+            <input type="text" id="street" name="street" placeholder="z. B. Musterstraße" required />
+          </div>
+          <div class="form-group">
+            <label for="building">Hausnummer</label>
+            <input type="text" id="building" name="building" placeholder="z. B. 12A" required />
+          </div>
+          <div class="form-group">
+            <label for="postcode">PLZ</label>
+            <input type="text" id="postcode" name="postcode" inputmode="numeric" pattern="[0-9]{4,6}" placeholder="z. B. 10115" required />
+          </div>
+          <div class="form-group full">
+            <label for="city">Stadt</label>
+            <input type="text" id="city" name="city" placeholder="z. B. Berlin" required />
+          </div>
+          <div class="form-group full">
+            <span id="pickup-error" class="error" role="alert" aria-live="polite"></span>
+          </div>
+          <div class="actions full">
+            <button type="submit" class="btn">Adresse speichern</button>
+            <button type="button" class="btn ghost" id="back-to-options-1">Zurück</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Übergabe Suche -->
+      <div id="uebergabe-search" class="hidden" style="margin-top:20px;">
+        <h3>Nächsten Drop‑Point finden</h3>
+        <div class="form two-cols">
+          <input type="search" id="search" placeholder="Nach PLZ/Stadt/Name suchen…" aria-label="Drop‑Point suchen" />
+          <button class="btn" id="geo-btn" type="button" title="Standort verwenden">Standort nutzen</button>
+        </div>
+        <p class="muted" style="margin:10px 0;">Tipp: Erlauben Sie den Standortzugriff, um die nächstgelegenen Punkte zu sehen.</p>
+        <ul id="points" class="points"></ul>
+        <div class="actions" style="margin-top:12px;">
+          <button type="button" class="btn ghost" id="back-to-options-2">Zurück</button>
+        </div>
+      </div>
+
+      <!-- Spenden-Details (für beide Optionen) -->
+      <div id="details-form" class="hidden" style="margin-top:24px;">
+        <h3>Spenden‑Details</h3>
+        <form id="donation-form" class="form" novalidate>
+          <div class="form-group">
+            <label for="clothes">Kleidungstyp</label>
+            <select id="clothes" required>
+              <option value="">Bitte wählen…</option>
+              <option>Jacken/Mäntel</option>
+              <option>Hemden/Blusen</option>
+              <option>Hosen/Röcke</option>
+              <option>Kindersachen</option>
+              <option>Schuhe</option>
+              <option>Sonstiges</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="crisis">Krisengebiet</label>
+            <select id="crisis" required>
+              <option value="">Bitte wählen…</option>
+              <option>Syrien</option>
+              <option>Sudan</option>
+              <option>Ukraine</option>
+              <option>Lokale Bedürftige</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="date">Datum</label>
+            <input type="date" id="date" required />
+          </div>
+          <div class="form-group">
+            <label for="time">Uhrzeit</label>
+            <input type="time" id="time" required />
+          </div>
+          <div class="form-group full">
+            <span id="details-error" class="error" role="alert" aria-live="polite"></span>
+          </div>
+          <div class="actions full">
+            <button class="btn" type="submit">Weiter zur Bestätigung</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- STEP 3: Bestätigung -->
+    <section id="step-3" class="card hidden" aria-hidden="true">
+      <div class="stepper" aria-hidden="true">
+        <div class="step">1 · Registrierung</div>
+        <div class="step">2 · Versandoption</div>
+        <div class="step active">3 · Bestätigen</div>
+      </div>
+      <h2>Danke!</h2>
+      <pre class="muted" id="summary" style="white-space:pre-wrap"></pre>
+      <div class="actions">
+        <button class="btn" type="button" onclick="window.location='home.html'">Zurück zu Home</button>
+      </div>
+    </section>
+
+  </main>
+  <script src="js/app.js" defer></script>
+</body>
+</html>
