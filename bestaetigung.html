@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bestätigung — Kleiderspende</title>
+  <link href="css/registrierung-style.css" rel="stylesheet" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <img src="assets/img/secondLifeKleindungLogo.png" alt="Logo" class="logo" />
+      <h1 class="site-title">Kleiderspenden-Portal</h1>
+      <nav class="global-nav" aria-label="Hauptnavigation">
+        <a href="home.html">Home</a>
+        <a href="aboutUs.html">Über uns</a>
+        <a href="FAQs.html">FAQs</a>
+        <a href="kontakt.html">Kontakt</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <h2>Registrierung erfolgreich</h2>
+      <div id="content">
+        <p class="muted">Lade Details…</p>
+      </div>
+      <div class="actions" style="margin-top:16px;">
+        <button class="btn" id="to-home">Zurück zu Home</button>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="card" style="max-width:960px; margin: 12px auto;">
+      <p class="legal muted">© Kleiderspenden-Portal — Gemeinnütziger Verein.</p>
+    </div>
+  </footer>
+
+  <script>
+    (function(){
+      const el = document.getElementById('content');
+      try {
+        const raw = sessionStorage.getItem('ks_registration');
+        if (!raw) throw new Error('Keine Registrierungsdaten gefunden');
+        const data = JSON.parse(raw);
+        const { user = {}, shipping = {}, donation = {}, summary = '' } = data;
+        const parts = [];
+        parts.push(`<strong>Registriert von</strong>: ${user.firstname || ''} ${user.lastname || ''} &lt;${user.email || ''}&gt;`);
+        parts.push(`<strong>Versandart</strong>: ${shipping.type || ''}`);
+        parts.push(`<strong>Ort</strong>: ${shipping.location || ''}`);
+        parts.push(`<strong>Kleidungstyp</strong>: ${donation.clothes || ''}`);
+        parts.push(`<strong>Krisengebiet</strong>: ${donation.crisis || ''}`);
+        parts.push(`<strong>Datum</strong>: ${donation.date || ''}`);
+        parts.push(`<strong>Uhrzeit</strong>: ${donation.time || ''}`);
+        el.innerHTML = '<div style="white-space:pre-wrap">' + parts.join('<br>') + '</div>';
+      } catch (err) {
+        el.innerHTML = '<p class="error">Entschuldigung, die Bestätigungsdaten konnten nicht geladen werden.</p>' +
+          '<p class="muted">Bitte kehren Sie zurück zur Registrierungsseite und versuchen es erneut.</p>';
+        console.warn(err);
+      }
+      document.getElementById('to-home').addEventListener('click', function(){ window.location='home.html'; });
+    })();
+  </script>
+</body>
+</html>

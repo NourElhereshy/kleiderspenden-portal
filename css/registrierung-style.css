@@ -44,6 +44,7 @@ body::before {
   grid-template-columns: 1fr;
   gap: 20px;
 }
+ 
 .card {
   background: var(--card-bg);
   backdrop-filter: blur(6px);
@@ -192,6 +193,15 @@ input:focus {
   border-radius: 12px;
   background: #fff;
   padding: 12px;
+}
+.site-footer {
+  text-align: center;
+  color: rgba(255,255,255,0.95);
+  font-size: 0.9rem;
+  margin-top: 18px;
+}
+.site-footer .legal {
+  opacity: 0.95;
 }
 @media (max-width: 720px) {
   .form {
