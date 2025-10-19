@@ -1,14 +1,11 @@
-// --- Config ---
-// TODO: Setzen Sie hier die echte Büro‑PLZ ein. Beispiel: '10115'
+
 const OFFICE_POSTCODE = "10115";
 
-// --- DOM helpers ---
 const $ = (sel, el = document) => el.querySelector(sel);
 const $$ = (sel, el = document) => Array.from(el.querySelectorAll(sel));
 const show = (sel) => $(sel).classList.remove("hidden");
 const hide = (sel) => $(sel).classList.add("hidden");
 
-// set minimum date for #date to today (local)
 function setDateMinToToday() {
   const dateInput = $("#date");
   if (!dateInput) return;
@@ -21,14 +18,12 @@ function setDateMinToToday() {
 }
 document.addEventListener("DOMContentLoaded", setDateMinToToday);
 
-// --- Global state for summary ---
 const state = {
   user: {},
   shipping: { type: null, location: null },
   donation: { clothes: null, crisis: null, date: null, time: null },
 };
 
-// --- Registration validation ---
 const regForm = $("#register-form");
 const regError = $("#reg-error");
 
@@ -48,7 +43,6 @@ regForm.addEventListener("submit", (e) => {
     return;
   }
 
-  // Save minimal user data
   state.user.firstname = $("#firstname").value.trim();
   state.user.lastname = $("#lastname").value.trim();
   state.user.email = $("#email").value.trim();
@@ -58,14 +52,13 @@ regForm.addEventListener("submit", (e) => {
   $("#step-2").setAttribute("aria-hidden", "false");
 });
 
-// --- Option handlers ---
 const optAbholung = $("#opt-abholung");
 const optUebergabe = $("#opt-uebergabe");
 
 optAbholung.addEventListener("click", () => {
   $("#abholung-form").classList.remove("hidden");
   $("#uebergabe-search").classList.add("hidden");
-  $("#details-form").classList.add("hidden"); // hide details until address ok
+  $("#details-form").classList.add("hidden"); 
   $("#street").focus();
   state.shipping.type = "Abholung";
 });
@@ -73,13 +66,12 @@ optAbholung.addEventListener("click", () => {
 optUebergabe.addEventListener("click", () => {
   $("#uebergabe-search").classList.remove("hidden");
   $("#abholung-form").classList.add("hidden");
-  $("#details-form").classList.add("hidden"); // hide details until point selected
+  $("#details-form").classList.add("hidden"); 
   $("#search").focus();
   state.shipping.type = "Übergabe";
   renderPoints(points);
 });
 
-// Back buttons in step 2 sub-views
 $("#back-to-options-1").addEventListener("click", () => {
   $("#abholung-form").classList.add("hidden");
 });
@@ -87,7 +79,6 @@ $("#back-to-options-2").addEventListener("click", () => {
   $("#uebergabe-search").classList.add("hidden");
 });
 
-// --- Abholung (Pickup) ---
 const pickupForm = $("#pickup-form");
 const pickupError = $("#pickup-error");
 
@@ -105,7 +96,6 @@ pickupForm.addEventListener("submit", (e) => {
     return;
   }
 
-  // New rule: first two digits of PLZ must match the office PLZ
   const userPrefix = postcode.slice(0, 2);
   const officePrefix = OFFICE_POSTCODE.slice(0, 2);
   if (userPrefix !== officePrefix) {
@@ -113,15 +103,12 @@ pickupForm.addEventListener("submit", (e) => {
     return;
   }
 
-  // Save shipping location
   state.shipping.location = `${street} ${building}, ${postcode} ${city}`;
 
-  // Show donation details step (common to both flows)
   $("#details-form").classList.remove("hidden");
   $("#clothes").focus();
 });
 
-// --- Übergabe (Drop‑off) ---
 const points = [
   {
     name: "PaketShop Mitte",
@@ -210,7 +197,6 @@ function renderPoints(list) {
       </div>`;
     li.querySelector("[data-select-point]").addEventListener("click", () => {
       state.shipping.location = `${p.name}, ${p.postcode} ${p.city}`;
-      // Show donation details step
       $("#details-form").classList.remove("hidden");
       $("#clothes").focus();
     });
@@ -218,7 +204,6 @@ function renderPoints(list) {
   });
 }
 
-// Text search filter
 $("#search").addEventListener("input", (e) => {
   const q = e.target.value.toLowerCase();
   const filtered = points.filter(
@@ -230,7 +215,6 @@ $("#search").addEventListener("input", (e) => {
   renderPoints(filtered);
 });
 
-// Geolocation sorting
 $("#geo-btn").addEventListener("click", async () => {
   if (!("geolocation" in navigator)) {
     alert("Geolokalisierung wird von Ihrem Browser nicht unterstützt.");
@@ -257,7 +241,6 @@ $("#geo-btn").addEventListener("click", async () => {
   );
 });
 
-// --- Donation details (shared final step) ---
 const donationForm = $("#donation-form");
 const detailsError = $("#details-error");
 
@@ -275,7 +258,6 @@ donationForm.addEventListener("submit", (e) => {
     return;
   }
 
-  // Validate date is today or in the future
   const selected = new Date(date);
   selected.setHours(0, 0, 0, 0);
   const today = new Date();
@@ -287,7 +269,6 @@ donationForm.addEventListener("submit", (e) => {
 
   state.donation = { clothes, crisis, date, time };
 
-  // Build summary text
   const summary = [
     `Registrierung: ${state.user.firstname || ""} ${state.user.lastname || ""} <${state.user.email || ""}>`,
     `Versandart: ${state.shipping.type}`,
@@ -304,9 +285,7 @@ donationForm.addEventListener("submit", (e) => {
   $("#step-3").setAttribute("aria-hidden", "false");
 });
 
-// --- Debug ---
 $("#debug-reset").addEventListener("click", () => {
-  // Reset state to initial
   Object.assign(state, {
     donation: { clothes: null, crisis: null, date: null, time: null },
     shipping: { type: null, location: null },
